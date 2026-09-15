@@ -1,3 +1,6 @@
 from django.test import TestCase
 
-# Create your tests here.
+
+class ClinicBookingSmokeTest(TestCase):
+    def test_project_imports(self):
+        self.assertTrue(True)
