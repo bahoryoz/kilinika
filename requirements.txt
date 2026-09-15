@@ -1,0 +1,7 @@
+Django==5.2.15
+djangorestframework==3.17.1
+djangorestframework-simplejwt==5.5.1
+django-filter==26.1
+psycopg2-binary==2.9.13
+aiogram==3.30.0
+python-dotenv==1.2.3
