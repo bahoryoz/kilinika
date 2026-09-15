@@ -8,6 +8,12 @@ Bu loyiha kichik klinikada bemorlar uchun Telegram bot orqali navbat olish tizim
 - `python manage.py makemigrations` — migration fayllari yaratilishi tekshirildi.
 - PostgreSQL serverini ishga tushirish kerak: loyiha PostgreSQL bilan ishlaydi, lokal kompyuterda service mavjud bo'lmaganligi sababli DB ishlatib bo'lmadi.
 
+## Bot oqimi
+
+- `/start` -> asosiy menyu
+- `Navbat olish` -> yo'nalish, shifokor, sana, vaqt
+- `Mening navbatlarim` -> bemor navbatlarini ko'rish va bekor qilish
+
 ## O'rnatish
 
 1. Virtual environment yarating:
