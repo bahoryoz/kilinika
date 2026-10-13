@@ -6,7 +6,7 @@ from django.utils import timezone
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -27,19 +27,25 @@ from .services import generate_slots_for_schedule, get_available_days_for_doctor
 class SpecialityViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Speciality.objects.filter(is_active=True)
     serializer_class = SpecialitySerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]  # Public read access for bot browsing
 
 
 class DoctorViewSet(viewsets.ModelViewSet):
     queryset = Doctor.objects.select_related('user', 'speciality').all()
     serializer_class = DoctorSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]  # Public read access for bot browsing
     filterset_fields = ['speciality', 'is_active']
     search_fields = ['user__first_name', 'user__last_name', 'user__username']
 
+    def get_permissions(self):
+        """Allow public read, require auth for write"""
+        if self.action in ('list', 'retrieve'):
+            return [AllowAny()]
+        return [IsAuthenticated()]
+
     def get_queryset(self):
         qs = self.queryset
-        if self.request.user.role == 'doctor':
+        if self.request.user and self.request.user.is_authenticated and self.request.user.role == 'doctor':
             return qs.filter(user=self.request.user)
         return qs
 
@@ -75,7 +81,7 @@ class ScheduleViewSet(viewsets.ModelViewSet):
 
 class SlotViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = SlotSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]  # Public read access for bot browsing
 
     def get_queryset(self):
         qs = Slot.objects.select_related('doctor__user', 'doctor__speciality').filter(is_available=True)
